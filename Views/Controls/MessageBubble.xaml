@@ -1,0 +1,100 @@
+<UserControl x:Class="Engine.Views.Controls.MessageBubble"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Engine.Views.Controls">
+    <Grid Margin="0,4">
+        <Grid HorizontalAlignment="{Binding IsOutgoing, Converter={StaticResource MsgAlign}}"
+              MaxWidth="520">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <c:AvatarControl Grid.Column="0"
+                             Size="28"
+                             Margin="0,0,8,0"
+                             Initials="{Binding Sender.Initials, FallbackValue='?'}"
+                             ColorStart="{Binding Sender.AvatarColorStart, FallbackValue='#7B61FF'}"
+                             ColorEnd="{Binding Sender.AvatarColorEnd, FallbackValue='#00D4FF'}"
+                             VerticalAlignment="Top"
+                             Visibility="{Binding ShowAvatar, Converter={StaticResource BoolToVis}}"/>
+
+            <Border Grid.Column="1"
+                    Background="{Binding IsOutgoing, Converter={StaticResource MsgBubble}}"
+                    CornerRadius="{Binding IsOutgoing, Converter={StaticResource MsgCorner}}"
+                    Padding="14,10"
+                    SnapsToDevicePixels="True">
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="Tt" Y="20"/>
+                </Border.RenderTransform>
+                <Border.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Tt"
+                                                 Storyboard.TargetProperty="Y"
+                                                 From="20" To="0" Duration="0:0:0.18"/>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="0" To="1" Duration="0:0:0.18"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Border.Triggers>
+                <StackPanel>
+                    <TextBlock Text="{Binding Sender.FullName}"
+                               FontFamily="{StaticResource UiFontSemibold}"
+                               FontSize="12"
+                               Foreground="{DynamicResource AccentSecondaryBrush}"
+                               Visibility="{Binding ShowSenderName, Converter={StaticResource BoolToVis}}"
+                               Margin="0,0,0,4"/>
+
+                    <Border Background="#22FFFFFF"
+                            CornerRadius="6"
+                            Padding="8,6"
+                            Margin="0,0,0,6"
+                            Visibility="{Binding ReplyTo, Converter={StaticResource NotNullToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding ReplyTo.Sender.FullName, FallbackValue='Сообщение'}"
+                                       FontSize="11"
+                                       FontFamily="{StaticResource UiFontSemibold}"
+                                       Foreground="{DynamicResource AccentSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ReplyTo.Text}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxHeight="32"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{Binding Text}"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource UiFont}"
+                               FontSize="14"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" HorizontalAlignment="Right">
+                        <TextBlock Text="{Binding TimeText}"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding StatusGlyph}"
+                                   FontSize="11"
+                                   FontFamily="{StaticResource UiFontSemibold}"
+                                   Margin="6,0,0,0"
+                                   Visibility="{Binding IsOutgoing, Converter={StaticResource BoolToVis}}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRead}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
