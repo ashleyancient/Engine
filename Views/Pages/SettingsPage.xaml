@@ -1,0 +1,309 @@
+<UserControl x:Class="Engine.Views.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:Engine.Views.Controls">
+    <Grid Background="{DynamicResource PrimaryBrush}">
+        <ScrollViewer Padding="32,28,32,32">
+            <StackPanel MaxWidth="780" HorizontalAlignment="Stretch">
+                <TextBlock Text="Настройки" Style="{StaticResource TitleText}" Margin="0,0,0,18"/>
+
+                <!-- PROFILE -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Профиль" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Top" Margin="0,0,24,0">
+                                <c:AvatarControl Size="96"
+                                                 Initials="{Binding ProfileVM.CurrentUser.Initials}"
+                                                 ColorStart="{Binding ProfileVM.CurrentUser.AvatarColorStart}"
+                                                 ColorEnd="{Binding ProfileVM.CurrentUser.AvatarColorEnd}"
+                                                 ShowOnline="{Binding ProfileVM.CurrentUser.IsOnline}"/>
+                                <Button Content="Сменить цвет"
+                                        Style="{StaticResource GhostButton}"
+                                        Command="{Binding ProfileVM.ChangeAvatarCommand}"
+                                        Margin="0,12,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Имя" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                                        <TextBox Text="{Binding ProfileVM.FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Фамилия" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                                        <TextBox Text="{Binding ProfileVM.LastName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock Text="Username" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding ProfileVM.Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="О себе" Style="{StaticResource SecondaryText}"/>
+                                    <TextBlock Text="{Binding ProfileVM.BioCounter}"
+                                               Style="{StaticResource SecondaryText}"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+                                <TextBox Text="{Binding ProfileVM.Bio, UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         Height="64"
+                                         Margin="0,0,0,10"/>
+
+                                <TextBlock Text="Телефон" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="{DynamicResource CardBrush}"
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Margin="0,0,8,0">
+                                        <TextBlock Text="RU"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{StaticResource UiFontSemibold}"/>
+                                    </Border>
+                                    <TextBox Grid.Column="1" Text="{Binding ProfileVM.PhoneNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Сохранить изменения"
+                                            Style="{StaticResource AccentButton}"
+                                            Command="{Binding ProfileVM.SaveCommand}"/>
+                                    <TextBlock Text="{Binding ProfileVM.StatusMessage}"
+                                               Foreground="{DynamicResource OnlineBrush}"
+                                               VerticalAlignment="Center"
+                                               Margin="14,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- APPEARANCE -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Оформление" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Тёмная тема" FontFamily="{StaticResource UiFontSemibold}"/>
+                                <TextBlock Text="Переключите для смены оформления интерфейса"
+                                           Style="{StaticResource SecondaryText}"
+                                           Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.IsDarkTheme}" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="Акцентный цвет" Style="{StaticResource SecondaryText}" Margin="0,8,0,8"/>
+                        <ItemsControl>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,8,0"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Фиолетовый">
+                                <Ellipse Width="22" Height="22" Fill="#7B61FF"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,8,0"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Синий">
+                                <Ellipse Width="22" Height="22" Fill="#1E90FF"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,8,0"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Зелёный">
+                                <Ellipse Width="22" Height="22" Fill="#11998E"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,8,0"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Красный">
+                                <Ellipse Width="22" Height="22" Fill="#FF4757"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30" Margin="0,0,8,0"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Оранжевый">
+                                <Ellipse Width="22" Height="22" Fill="#F7971E"/>
+                            </Button>
+                            <Button Style="{StaticResource IconButton}" Width="30" Height="30"
+                                    Command="{Binding SettingsVM.SetAccentCommand}" CommandParameter="Розовый">
+                                <Ellipse Width="22" Height="22" Fill="#F857A6"/>
+                            </Button>
+                        </ItemsControl>
+
+                        <Grid Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Размер шрифта" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="12" Maximum="18"
+                                    TickFrequency="1" IsSnapToTickEnabled="True"
+                                    Value="{Binding SettingsVM.FontSize}"/>
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding SettingsVM.FontSize, StringFormat={}{0:0} px}"
+                                       Margin="12,0,0,0"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <CheckBox Content="Компактный режим списка"
+                                  IsChecked="{Binding SettingsVM.CompactMode}"
+                                  Margin="0,12,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- NOTIFICATIONS -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Уведомления" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Звук уведомлений" VerticalAlignment="Center"/>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.NotifSound}" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Вибрация" VerticalAlignment="Center"/>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.NotifVibrate}" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Предпросмотр в уведомлениях" VerticalAlignment="Center"/>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.NotifPreview}" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Не беспокоить"/>
+                                <TextBlock Text="С 23:00 до 08:00"
+                                           Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.DoNotDisturb}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- PRIVACY -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Конфиденциальность" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <TextBlock Text="Кто видит номер телефона" Style="{StaticResource SecondaryText}" Margin="0,4,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="Все" GroupName="phone" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyPhone, Converter={StaticResource StrEqBool}, ConverterParameter=Все, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyPhoneCommand}" CommandParameter="Все"/>
+                            <RadioButton Content="Контакты" GroupName="phone" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyPhone, Converter={StaticResource StrEqBool}, ConverterParameter=Контакты, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyPhoneCommand}" CommandParameter="Контакты"/>
+                            <RadioButton Content="Никто" GroupName="phone"
+                                         IsChecked="{Binding SettingsVM.PrivacyPhone, Converter={StaticResource StrEqBool}, ConverterParameter=Никто, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyPhoneCommand}" CommandParameter="Никто"/>
+                        </StackPanel>
+                        <TextBlock Text="Кто видит статус онлайн" Style="{StaticResource SecondaryText}" Margin="0,12,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="Все" GroupName="online" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyOnline, Converter={StaticResource StrEqBool}, ConverterParameter=Все, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyOnlineCommand}" CommandParameter="Все"/>
+                            <RadioButton Content="Контакты" GroupName="online" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyOnline, Converter={StaticResource StrEqBool}, ConverterParameter=Контакты, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyOnlineCommand}" CommandParameter="Контакты"/>
+                            <RadioButton Content="Никто" GroupName="online"
+                                         IsChecked="{Binding SettingsVM.PrivacyOnline, Converter={StaticResource StrEqBool}, ConverterParameter=Никто, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyOnlineCommand}" CommandParameter="Никто"/>
+                        </StackPanel>
+                        <TextBlock Text="Кто видит аватар" Style="{StaticResource SecondaryText}" Margin="0,12,0,6"/>
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="Все" GroupName="avatar" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyAvatar, Converter={StaticResource StrEqBool}, ConverterParameter=Все, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyAvatarCommand}" CommandParameter="Все"/>
+                            <RadioButton Content="Контакты" GroupName="avatar" Margin="0,0,16,0"
+                                         IsChecked="{Binding SettingsVM.PrivacyAvatar, Converter={StaticResource StrEqBool}, ConverterParameter=Контакты, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyAvatarCommand}" CommandParameter="Контакты"/>
+                            <RadioButton Content="Никто" GroupName="avatar"
+                                         IsChecked="{Binding SettingsVM.PrivacyAvatar, Converter={StaticResource StrEqBool}, ConverterParameter=Никто, Mode=OneWay}"
+                                         Command="{Binding SettingsVM.SetPrivacyAvatarCommand}" CommandParameter="Никто"/>
+                        </StackPanel>
+                        <Grid Margin="0,16,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Двухфакторная аутентификация"/>
+                                <TextBlock Text="Дополнительный уровень защиты входа"
+                                           Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <ToggleButton Grid.Column="1" IsChecked="{Binding SettingsVM.TwoFactor}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- STORAGE -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Данные и хранилище" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Использовано места"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SettingsVM.StorageText}"
+                                       Foreground="{DynamicResource AccentSecondaryBrush}"
+                                       FontFamily="{StaticResource UiFontSemibold}"/>
+                        </Grid>
+                        <ProgressBar Height="8"
+                                     Minimum="0" Maximum="100"
+                                     Value="{Binding SettingsVM.StorageProgress, Mode=OneWay}"
+                                     Background="{DynamicResource HoverBrush}"
+                                     Foreground="{DynamicResource AccentBrush}"
+                                     BorderThickness="0"/>
+                        <Button Content="Очистить кэш"
+                                Style="{StaticResource GhostButton}"
+                                Command="{Binding SettingsVM.ClearCacheCommand}"
+                                Margin="0,12,0,0"
+                                HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ABOUT -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="О приложении" Style="{StaticResource HeaderText}" Margin="0,0,0,12"/>
+                        <TextBlock Text="ENGINE v1.0.0" FontFamily="{StaticResource UiFontSemibold}" FontSize="15"/>
+                        <TextBlock Text="Connect beyond limits"
+                                   Foreground="{DynamicResource AccentSecondaryBrush}"
+                                   Margin="0,2,0,8"/>
+                        <TextBlock Text="Современный мессенджер и социальная сеть, разработанные на платформе .NET 8 (WPF)."
+                                   Style="{StaticResource SecondaryText}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
